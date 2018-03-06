@@ -1,16 +1,15 @@
 package com.fierced.ezgame;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
+import org.andengine.util.color.Color;
+import org.andengine.util.color.constants.ColorConstants;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Fierced on 3/5/2018.
@@ -18,14 +17,15 @@ import java.util.ListIterator;
 
 public class VectorArea {
 
-    int pX, pY, width, height, cell_size;
-    int area_w, area_h;
-    short[][] dirArray;   // Holds direction info
-    // 0-right 1-upRight 2-up 3-upLeft 4-left 5-downLeft 6-down 7-down-right
+    private int pX, pY, width, height, cell_size;
+    private int area_w, area_h;
 
-    Boolean[][] powArray;  // Holds tile info
-    Rectangle[][] rectList;
+    private int[][] tileArray;  // Holds tile info
+    private Rectangle[][] rectArray; // Holds drawable tiles
 
+    private ArrayList<PowerBall> powList; // Holds powerBalls
+    private int powerBallAmount = 0;
+    private ArrayList<PowerBall> delPowList; // Powerballs to be deleted
 
     public VectorArea(int pX, int pY, int width, int height, int cell_size) {
         this.pX = pX;
@@ -40,135 +40,74 @@ public class VectorArea {
         area_w = width / cell_size;
         area_h = height / cell_size;
 
-        powArray = new Boolean[area_h][area_w];
-        rectList = new Rectangle[area_h][area_w];
+        tileArray = new int[area_h][area_w];
+        rectArray = new Rectangle[area_h][area_w];
+        powList = new ArrayList<>();
+        delPowList = new ArrayList<>();
     }
 
-    public void ApplyForce(int pX, int pY, short amount, short dir) {
+    public void ApplyForce(float pX, float pY, int amount) {
 
-        if (pX <= 0 || pX >= area_w || pY <= 0 || pY >= area_h) return;
-    }
+        if (pX <= 0 || pX >= width || pY <= 0 || pY >= height) return;
 
-    public void Update() {
-        //Log.println(Log.DEBUG, "Debug", "Update");
-        /*
-        short[][] tempPowArray = new short[area_h][area_w];
-        short[][] tempDirArray = new short[area_h][area_w];
+        Log.println(Log.DEBUG, "Debug", "POWER");
 
-        for (int i = 1; i < area_h - 1; i++) {
-            for (int j = 1; j < area_w - 1; j++) {
-
-                short tempPow = powArray[i][j];
-                rectList[i][j].setColor(tempPow, tempPow, tempPow);
-                short lowPow = (short) (tempPow /2);
-                short hiPow = (short) (tempPow -4);
-                if (tempPow <= 45 || tempDirArray[i][j] > 50) continue;
-                switch (dirArray[i][j]) {
-
-                    // 0-right 1-upRight 2-up 3-upLeft 4-left 5-downLeft 6-down 7-down-right
-
-                    case 0:
-                        tempDirArray[i - 1][j + 1] = 1;
-                        tempDirArray[i][j + 1] = 0;
-                        tempDirArray[i + 1][j + 1] = 7;
-
-                        tempPowArray[i - 1][j + 1] = lowPow;
-                        tempPowArray[i][j + 1] = hiPow;
-                        tempPowArray[i + 1][j + 1] = lowPow;
-                        break;
-
-                    case 1:
-                        tempDirArray[i - 1][j] = 2;
-                        tempDirArray[i - 1][j + 1] = 1;
-                        tempDirArray[i][j + 1] = 0;
-
-                        tempPowArray[i - 1][j] = lowPow;
-                        tempPowArray[i - 1][j + 1] = hiPow;
-                        tempPowArray[i][j + 1] = lowPow;
-                        break;
-
-                    case 2:
-                        tempDirArray[i - 1][j - 1] = 3;
-                        tempDirArray[i - 1][j] = 2;
-                        tempDirArray[i - 1][j + 1] = 1;
-
-                        tempPowArray[i - 1][j - 1] = lowPow;
-                        tempPowArray[i - 1][j] = hiPow;
-                        tempPowArray[i - 1][j + 1] = lowPow;
-                        break;
-
-                    case 3:
-                        tempDirArray[i - 1][j] = 2;
-                        tempDirArray[i - 1][j - 1] = 3;
-                        tempDirArray[i][j - 1] = 4;
-
-                        tempPowArray[i - 1][j] = lowPow;
-                        tempPowArray[i - 1][j - 1] = hiPow;
-                        tempPowArray[i][j - 1] = lowPow;
-                        break;
-
-                    case 4:
-                        tempDirArray[i - 1][j - 1] = 3;
-                        tempDirArray[i][j - 1] = 4;
-                        tempDirArray[i + 1][j - 1] = 5;
-
-                        tempPowArray[i - 1][j - 1] = lowPow;
-                        tempPowArray[i][j - 1] = hiPow;
-                        tempPowArray[i + 1][j - 1] = lowPow;
-                        break;
-
-                    case 5:
-                        tempDirArray[i + 1][j] = 6;
-                        tempDirArray[i + 1][j - 1] = 5;
-                        tempDirArray[i][j - 1] = 4;
-
-                        tempPowArray[i + 1][j] = lowPow;
-                        tempPowArray[i + 1][j - 1] = hiPow;
-                        tempPowArray[i][j - 1] = lowPow;
-                        break;
-
-                    case 6:
-                        tempDirArray[i + 1][j - 1] = 5;
-                        tempDirArray[i + 1][j] = 6;
-                        tempDirArray[i + 1][j + 1] = 7;
-
-                        tempPowArray[i + 1][j - 1] = lowPow;
-                        tempPowArray[i + 1][j] = hiPow;
-                        tempPowArray[i + 1][j + 1] = lowPow;
-                        break;
-
-                    case 7:
-                        tempDirArray[i + 1][j] = 6;
-                        tempDirArray[i + 1][j + 1] = 7;
-                        tempDirArray[i][j + 1] = 0;
-
-                        tempPowArray[i + 1][j] = lowPow;
-                        tempPowArray[i + 1][j + 1] = hiPow;
-                        tempPowArray[i][j + 1] = lowPow;
-                        break;
-                    // 0-right 1-upRight 2-up 3-upLeft 4-left 5-downLeft 6-down 7-down-right
-                }
-            }
+        powerBallAmount = amount;
+        for (int i = 0; i < amount; i++) {
+            PowerBall tempPB = new PowerBall(80, pX, pY, (double) i / amount * Math.PI * 2);
+            powList.add(tempPB);
         }
 
-        if(tempPowArray[3][3]!=0)tempPowArray[3][3]=0;
-        if(tempPowArray[4][3]!=0)tempPowArray[4][3]=0;
-        if(tempPowArray[4][4]!=0)tempPowArray[4][4]=0;
-        if(tempPowArray[3][4]!=0)tempPowArray[3][4]=0;
-
-
-        powArray = tempPowArray;
-        dirArray = tempDirArray;
-        */
     }
 
-    public void Draw(VertexBufferObjectManager vbo, Scene scene) {
+    public void Update(float delta) {
+        for (PowerBall p : powList) {
+            p.Update(delta);
+            if (p.pX > width || p.pY > height ||
+                    p.pX < 0 || p.pY < 0) {
+
+                delPowList.add(p);
+                continue;
+            }
+            int tempPX = (int) p.pX / cell_size;
+            int tempPY = (int) p.pY / cell_size;
+
+            if (tempPX < area_w && tempPY < area_h
+                    && tempPX >= 0 && tempPY >= 0) {
+                tileArray[tempPY][tempPX] = (int) (Math.random() * 5) + 2;
+                rectArray[tempPY][tempPX].setVisible(true);
+            }
+
+        }
+
+        powList.removeAll(delPowList);
+        delPowList.clear();
+
 
         for (int i = 0; i < area_h; i++) {
             for (int j = 0; j < area_w; j++) {
-                Rectangle tempRect = new Rectangle(pX + j * cell_size, pY + i * cell_size, cell_size, cell_size, vbo);
-                tempRect.setColor(0, 0, 0);
-                rectList[i][j] = tempRect;
+                if (tileArray[i][j] == -1) continue;
+                if (tileArray[i][j] > 0) {
+                    tileArray[i][j]--;
+                } else {
+                    rectArray[i][j].setVisible(false);
+                    tileArray[i][j] = -1;
+                }
+
+            }
+        }
+
+    }
+
+    public void Draw(VertexBufferObjectManager vbo, Scene scene) {
+        Rectangle backRect = new Rectangle(pX, pY, width, height, vbo);
+        backRect.setColor(38.0f / 255.0f, 57.0f / 255.0f, 81.0f / 255.0f);
+        scene.attachChild(backRect);
+        for (int i = 0; i < area_h; i++) {
+            for (int j = 0; j < area_w; j++) {
+                Rectangle tempRect = new Rectangle(pX + j * cell_size, pY + i * cell_size, cell_size - 2, cell_size - 2, vbo);
+                //tempRect.setVisible(true);
+                rectArray[i][j] = tempRect;
                 scene.attachChild(tempRect);
             }
         }

@@ -12,10 +12,12 @@ import org.andengine.entity.scene.IOnSceneTouchListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.scene.background.Background;
 import org.andengine.entity.sprite.AnimatedSprite;
+import org.andengine.entity.sprite.Sprite;
 import org.andengine.input.touch.TouchEvent;
 import org.andengine.opengl.texture.TextureOptions;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlas;
 import org.andengine.opengl.texture.atlas.bitmap.BitmapTextureAtlasTextureRegionFactory;
+import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
 
@@ -33,8 +35,40 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
     private BitmapTextureAtlas turtleTextureAtlas;
     private ITiledTextureRegion turtleTextureRegion;
 
+    private BitmapTextureAtlas bottomScreenFrameTextureAtlas;
+    private ITextureRegion bottomScreenFrameRegion;
+
+    private BitmapTextureAtlas crystalRuneTextureAtlas;
+    private BitmapTextureAtlas darkRuneTextureAtlas;
+    private BitmapTextureAtlas earthRuneTextureAtlas;
+    private BitmapTextureAtlas fireRuneTextureAtlas;
+    private BitmapTextureAtlas leafRuneTextureAtlas;
+    private BitmapTextureAtlas mechRuneTextureAtlas;
+    private BitmapTextureAtlas mirrorRuneTextureAtlas;
+    private BitmapTextureAtlas snowRuneTextureAtlas;
+    private BitmapTextureAtlas starRuneTextureAtlas;
+    private BitmapTextureAtlas trashRuneTextureAtlas;
+    private BitmapTextureAtlas voltRuneTextureAtlas;
+    private BitmapTextureAtlas waterRuneTextureAtlas;
+    private BitmapTextureAtlas windRuneTextureAtlas;
+
+    private ITiledTextureRegion crystalRuneTextureRegion;
+    private ITiledTextureRegion darkRuneTextureRegion;
+    private ITiledTextureRegion earthRuneTextureRegion;
+    private ITiledTextureRegion fireRuneTextureRegion;
+    private ITiledTextureRegion leafRuneTextureRegion;
+    private ITiledTextureRegion mechRuneTextureRegion;
+    private ITiledTextureRegion mirrorRuneTextureRegion;
+    private ITiledTextureRegion snowRuneTextureRegion;
+    private ITiledTextureRegion starRuneTextureRegion;
+    private ITiledTextureRegion trashRuneTextureRegion;
+    private ITiledTextureRegion voltRuneTextureRegion;
+    private ITiledTextureRegion waterRuneTextureRegion;
+    private ITiledTextureRegion windRuneTextureRegion;
+
     private Scene scene;
     private VectorArea vectorArea;
+
 
     @Override
     public EngineOptions onCreateEngineOptions() {
@@ -59,6 +93,64 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
         turtleTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 900, 900, TextureOptions.DEFAULT);
         turtleTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(turtleTextureAtlas, this, "turtleSpriteSheet.PNG", 0, 0, 3, 3);
         turtleTextureAtlas.load();
+
+        bottomScreenFrameTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 1080, 720, TextureOptions.DEFAULT);
+        bottomScreenFrameRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bottomScreenFrameTextureAtlas, this, "BottomScreenFrame.png", 0, 0);
+        bottomScreenFrameTextureAtlas.load();
+
+        crystalRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        crystalRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(crystalRuneTextureAtlas, this, "RuneSprites/CrystalRune.png", 0, 0, 3, 4);
+        crystalRuneTextureAtlas.load();
+
+        darkRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        darkRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(darkRuneTextureAtlas, this, "RuneSprites/DarkRune.png", 0, 0, 3, 4);
+        darkRuneTextureAtlas.load();
+
+        earthRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        earthRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(earthRuneTextureAtlas, this, "RuneSprites/EarthRune.png", 0, 0, 3, 4);
+        earthRuneTextureAtlas.load();
+
+        fireRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        fireRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(fireRuneTextureAtlas, this, "RuneSprites/FireRune.png", 0, 0, 3, 4);
+        fireRuneTextureAtlas.load();
+
+        leafRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        leafRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(leafRuneTextureAtlas, this, "RuneSprites/LeafRune.png", 0, 0, 3, 4);
+        leafRuneTextureAtlas.load();
+
+        mechRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        mechRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mechRuneTextureAtlas, this, "RuneSprites/MechRune.png", 0, 0, 3, 4);
+        mechRuneTextureAtlas.load();
+
+        mirrorRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        mirrorRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(mirrorRuneTextureAtlas, this, "RuneSprites/MirrorRune.png", 0, 0, 3, 4);
+        mirrorRuneTextureAtlas.load();
+
+        snowRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        snowRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(snowRuneTextureAtlas, this, "RuneSprites/SnowRune.png", 0, 0, 3, 4);
+        snowRuneTextureAtlas.load();
+
+        starRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        starRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(starRuneTextureAtlas, this, "RuneSprites/StarRune.png", 0, 0, 3, 4);
+        starRuneTextureAtlas.load();
+
+        trashRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        trashRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(trashRuneTextureAtlas, this, "RuneSprites/TrashRune.png", 0, 0, 3, 4);
+        trashRuneTextureAtlas.load();
+
+        voltRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        voltRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(voltRuneTextureAtlas, this, "RuneSprites/VoltRune.png", 0, 0, 3, 4);
+        voltRuneTextureAtlas.load();
+
+        waterRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        waterRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(waterRuneTextureAtlas, this, "RuneSprites/WaterRune.png", 0, 0, 3, 4);
+        waterRuneTextureAtlas.load();
+
+        windRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
+        windRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(windRuneTextureAtlas, this, "RuneSprites/WindRune.png", 0, 0, 3, 4);
+        windRuneTextureAtlas.load();
+
+
     }
 
     @Override
@@ -66,17 +158,26 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
         scene = new Scene();
         scene.setBackground(new Background(0.69804f, 0.9274f, 0.7f));
 
-        vectorArea = new VectorArea(0, 600, 540, 360, 30);
+        vectorArea = new VectorArea(0, 600, 540, 360, 20);
         vectorArea.Init();
         vectorArea.Draw(mEngine.getVertexBufferObjectManager(), scene);
 
         AnimatedSprite enemy = createTiledSprite(enemyTextureRegion);
         AnimatedSprite gun = createTiledSprite(gunTextureRegion);
         AnimatedSprite turtle = createTiledSprite(turtleTextureRegion);
+        Sprite bottomScreenFrame = new Sprite(0, 600, 540, 360, bottomScreenFrameRegion, getVertexBufferObjectManager());
+        scene.attachChild(bottomScreenFrame);
+
+        AnimatedSprite testRune = createTiledSprite(fireRuneTextureRegion);
+        long[] testRuneAnimData = new long[]{100, 100, 100, 100,
+                100, 100, 100, 100,
+                100, 100, 100, 1000};
+        testRune.animate(testRuneAnimData);
+
         enemy.animate(100);
         gun.animate(60);
         turtle.animate(200);
-        enemy.setX(600);
+        enemy.setX(300);
         gun.setY(200);
         turtle.setY(200);
 
@@ -91,7 +192,7 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
                 //Log.println(Log.DEBUG, "Debug", Float.toString(pSecondsElapsed));
                 tempTimer += pSecondsElapsed;
                 if (tempTimer > 0) {
-                    vectorArea.Update();
+                    vectorArea.Update(pSecondsElapsed);
                     //vectorArea.ApplyForce(20, 10, (short) 127, (short) 0);
                     tempTimer -= 0f;
                 }
@@ -104,25 +205,21 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
 
     private AnimatedSprite createTiledSprite(ITiledTextureRegion tiledReg) {
         AnimatedSprite as = new AnimatedSprite(0, 0, tiledReg, mEngine.getVertexBufferObjectManager());
-        //scene.attachChild(as);
+        scene.attachChild(as);
         return as;
     }
 
     @Override
     public boolean onSceneTouchEvent(Scene pScene, TouchEvent pSceneTouchEvent) {
 
-        int pX = (int) (pSceneTouchEvent.getX() / 30);
-        int pY = (int) ((pSceneTouchEvent.getY()-600) / 30);
+        float pX = pSceneTouchEvent.getX();
+        float pY = pSceneTouchEvent.getY() - 600;
 
 
-        if(pSceneTouchEvent.isActionDown() && pSceneTouchEvent.getY()>600) {
+        if (pSceneTouchEvent.isActionDown() && pSceneTouchEvent.getY() > 600) {
 
-            vectorArea.ApplyForce(pX - 1, pY, (short) 120, (short) 4);
-            vectorArea.ApplyForce(pX + 1, pY, (short) 120, (short) 0);
-            vectorArea.ApplyForce(pX, pY + 1, (short) 120, (short) 6);
-            vectorArea.ApplyForce(pX, pY - 1, (short) 120, (short) 2);
+            vectorArea.ApplyForce(pX, pY, 100);
         }
-
         return false;
     }
 }
