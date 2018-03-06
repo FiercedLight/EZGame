@@ -1,0 +1,41 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:2:1-12:12
+INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:2:1-12:12
+INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:2:1-12:12
+INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:2:1-12:12
+INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:2:1-12:12
+INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:2:1-12:12
+INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:2:1-12:12
+	package
+		ADDED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:3:2-25
+		INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml
+		INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml
+	android:versionName
+		ADDED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:5:2-27
+		INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml
+		INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:2:11-69
+	android:versionCode
+		ADDED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:4:2-25
+		INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml
+		INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml
+uses-sdk
+ADDED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:9:2-68
+INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:9:2-68
+INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:9:2-68
+INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:9:2-68
+INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:9:2-68
+	android:targetSdkVersion
+		ADDED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:9:38-66
+		INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml
+		INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml
+	android:minSdkVersion
+		ADDED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:9:12-37
+		INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml
+		INJECTED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml
+application
+ADDED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:11:2-42
+	android:debuggable
+		ADDED from C:\Users\Fierced\AndroidStudioProjects\EzGame2\andengineLibrary\AndEngine-GLES2\AndroidManifest.xml:11:15-40
