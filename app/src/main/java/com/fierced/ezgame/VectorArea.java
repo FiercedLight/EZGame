@@ -1,15 +1,10 @@
 package com.fierced.ezgame;
 
-import android.util.Log;
-
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import org.andengine.util.color.Color;
-import org.andengine.util.color.constants.ColorConstants;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by Fierced on 3/5/2018.
@@ -17,7 +12,7 @@ import java.util.Random;
 
 public class VectorArea {
 
-    private int pX, pY, width, height, cell_size;
+    public int pX, pY, width, height, cell_size;
     private int area_w, area_h;
 
     private int[][] tileArray;  // Holds tile info
@@ -26,6 +21,9 @@ public class VectorArea {
     private ArrayList<PowerBall> powList; // Holds powerBalls
     private int powerBallAmount = 0;
     private ArrayList<PowerBall> delPowList; // Powerballs to be deleted
+    private ArrayList<PowerBall> addPowList; // Powerballs to be added
+
+    public ArrayList<Rune> runeList;
 
     public VectorArea(int pX, int pY, int width, int height, int cell_size) {
         this.pX = pX;
@@ -44,20 +42,28 @@ public class VectorArea {
         rectArray = new Rectangle[area_h][area_w];
         powList = new ArrayList<>();
         delPowList = new ArrayList<>();
+        addPowList = new ArrayList<>();
+        runeList = new ArrayList<>();
     }
 
-    public void ApplyForce(float pX, float pY, int amount) {
+    public void ApplyForce(float pX, float pY, int amount, int speed) {
 
         if (pX <= 0 || pX >= width || pY <= 0 || pY >= height) return;
 
-        Log.println(Log.DEBUG, "Debug", "POWER");
-
         powerBallAmount = amount;
         for (int i = 0; i < amount; i++) {
-            PowerBall tempPB = new PowerBall(80, pX, pY, (double) i / amount * Math.PI * 2);
-            powList.add(tempPB);
+            PowerBall tempPB = new PowerBall(speed, pX, pY, (double) i / amount * Math.PI * 2, 10);
+            addPowList.add(tempPB);
         }
 
+    }
+
+    public void ApplyOneForce(float pX, float pY, int speed, float dir, float power) {
+
+        if (pX <= 0 || pX >= width || pY <= 0 || pY >= height) return;
+
+        PowerBall tempPB = new PowerBall(speed, pX, pY, dir, power);
+        addPowList.add(tempPB);
     }
 
     public void Update(float delta) {
@@ -65,10 +71,12 @@ public class VectorArea {
             p.Update(delta);
             if (p.pX > width || p.pY > height ||
                     p.pX < 0 || p.pY < 0) {
-
                 delPowList.add(p);
                 continue;
             }
+            for (Rune r : runeList)
+                CheckPowerBallCollision(p, r);
+
             int tempPX = (int) p.pX / cell_size;
             int tempPY = (int) p.pY / cell_size;
 
@@ -81,6 +89,8 @@ public class VectorArea {
         }
 
         powList.removeAll(delPowList);
+        powList.addAll(addPowList);
+        addPowList.clear();
         delPowList.clear();
 
 
@@ -97,12 +107,10 @@ public class VectorArea {
             }
         }
 
+
     }
 
     public void Draw(VertexBufferObjectManager vbo, Scene scene) {
-        Rectangle backRect = new Rectangle(pX, pY, width, height, vbo);
-        backRect.setColor(38.0f / 255.0f, 57.0f / 255.0f, 81.0f / 255.0f);
-        scene.attachChild(backRect);
         for (int i = 0; i < area_h; i++) {
             for (int j = 0; j < area_w; j++) {
                 Rectangle tempRect = new Rectangle(pX + j * cell_size, pY + i * cell_size, cell_size - 2, cell_size - 2, vbo);
@@ -112,6 +120,26 @@ public class VectorArea {
             }
         }
 
+    }
+
+    public void CheckPowerBallCollision(PowerBall p, Rune r) {
+        if (Math.sqrt(Math.pow(pX + p.pX - r.pX - r.size / 2, 2) + Math.pow(pY + p.pY - r.pY - r.size / 2, 2)) < r.size / 2) {
+            if (r.OnPowerBallHit(p))
+                delPowList.add(p);
+        }
+    }
+
+    public void AddRune(Rune r) {
+        runeList.add(r);
+    }
+
+    public void DelRune(Rune r) {
+        runeList.remove(r);
+    }
+
+    public void RuneUpdate() {
+        for (Rune r : runeList)
+            r.OnGameClock();
     }
 
 }

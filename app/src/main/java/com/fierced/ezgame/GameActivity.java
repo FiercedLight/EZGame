@@ -1,8 +1,5 @@
 package com.fierced.ezgame;
 
-import android.util.Log;
-import android.view.MotionEvent;
-
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.handler.IUpdateHandler;
 import org.andengine.engine.options.EngineOptions;
@@ -21,6 +18,8 @@ import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
 
+import java.util.Random;
+
 public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouchListener {
 
     static final int CAMERA_WIDTH = 540;
@@ -37,6 +36,9 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
 
     private BitmapTextureAtlas bottomScreenFrameTextureAtlas;
     private ITextureRegion bottomScreenFrameRegion;
+
+    private BitmapTextureAtlas bottomScreenTableTextureAtlas;
+    private ITextureRegion bottomScreenTableRegion;
 
     private BitmapTextureAtlas crystalRuneTextureAtlas;
     private BitmapTextureAtlas darkRuneTextureAtlas;
@@ -98,6 +100,10 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
         bottomScreenFrameRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bottomScreenFrameTextureAtlas, this, "BottomScreenFrame.png", 0, 0);
         bottomScreenFrameTextureAtlas.load();
 
+        bottomScreenTableTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 1080, 720, TextureOptions.DEFAULT);
+        bottomScreenTableRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bottomScreenTableTextureAtlas, this, "bottomScreenTable.png", 0, 0);
+        bottomScreenTableTextureAtlas.load();
+
         crystalRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
         crystalRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(crystalRuneTextureAtlas, this, "RuneSprites/CrystalRune.png", 0, 0, 3, 4);
         crystalRuneTextureAtlas.load();
@@ -158,21 +164,30 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
         scene = new Scene();
         scene.setBackground(new Background(0.69804f, 0.9274f, 0.7f));
 
+
+        Sprite bottomScreenTable = new Sprite(0, 600, 540, 360, bottomScreenTableRegion, getVertexBufferObjectManager());
+        scene.attachChild(bottomScreenTable);
+
         vectorArea = new VectorArea(0, 600, 540, 360, 20);
         vectorArea.Init();
         vectorArea.Draw(mEngine.getVertexBufferObjectManager(), scene);
 
-        AnimatedSprite enemy = createTiledSprite(enemyTextureRegion);
-        AnimatedSprite gun = createTiledSprite(gunTextureRegion);
-        AnimatedSprite turtle = createTiledSprite(turtleTextureRegion);
         Sprite bottomScreenFrame = new Sprite(0, 600, 540, 360, bottomScreenFrameRegion, getVertexBufferObjectManager());
         scene.attachChild(bottomScreenFrame);
 
-        AnimatedSprite testRune = createTiledSprite(fireRuneTextureRegion);
-        long[] testRuneAnimData = new long[]{100, 100, 100, 100,
-                100, 100, 100, 100,
-                100, 100, 100, 1000};
-        testRune.animate(testRuneAnimData);
+        AnimatedSprite enemy = createTiledSprite(enemyTextureRegion);
+        AnimatedSprite gun = createTiledSprite(gunTextureRegion);
+        AnimatedSprite turtle = createTiledSprite(turtleTextureRegion);
+
+
+
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            SummonRandomAttackRune(random);
+        }
+        SummonRune(RuneType.MIRROR, 10, 0, 100);
+        SummonRune(RuneType.MECH, 300, 0, 100);
+        SummonRune(RuneType.TRASH, 300, 0, 1000);
 
         enemy.animate(100);
         gun.animate(60);
@@ -189,12 +204,13 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
             float tempTimer;
 
             public void onUpdate(float pSecondsElapsed) {
-                //Log.println(Log.DEBUG, "Debug", Float.toString(pSecondsElapsed));
+
+                vectorArea.Update(pSecondsElapsed);
+
                 tempTimer += pSecondsElapsed;
                 if (tempTimer > 0) {
-                    vectorArea.Update(pSecondsElapsed);
-                    //vectorArea.ApplyForce(20, 10, (short) 127, (short) 0);
-                    tempTimer -= 0f;
+                    vectorArea.RuneUpdate();
+                    tempTimer -= 2f;
                 }
             }
         });
@@ -218,8 +234,54 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
 
         if (pSceneTouchEvent.isActionDown() && pSceneTouchEvent.getY() > 600) {
 
-            vectorArea.ApplyForce(pX, pY, 100);
+            vectorArea.ApplyForce(pX, pY, 100, 80);
         }
         return false;
+    }
+
+    public void SummonRune(RuneType type, float attack, float hp, float capacity) {
+        ITiledTextureRegion tempTextureRegion = crystalRuneTextureRegion;
+        Rune testRune;
+        if (type == RuneType.CRYSTAL)
+            tempTextureRegion = crystalRuneTextureRegion;
+        else if (type == RuneType.DARK)
+            tempTextureRegion = darkRuneTextureRegion;
+        else if (type == RuneType.EARTH)
+            tempTextureRegion = earthRuneTextureRegion;
+        else if (type == RuneType.FIRE)
+            tempTextureRegion = fireRuneTextureRegion;
+        else if (type == RuneType.LEAF)
+            tempTextureRegion = leafRuneTextureRegion;
+        else if (type == RuneType.MECH)
+            tempTextureRegion = mechRuneTextureRegion;
+        else if (type == RuneType.MIRROR)
+            tempTextureRegion = mirrorRuneTextureRegion;
+        else if (type == RuneType.SNOW)
+            tempTextureRegion = snowRuneTextureRegion;
+        else if (type == RuneType.STAR)
+            tempTextureRegion = starRuneTextureRegion;
+        else if (type == RuneType.TRASH)
+            tempTextureRegion = trashRuneTextureRegion;
+        else if (type == RuneType.VOLT)
+            tempTextureRegion = voltRuneTextureRegion;
+        else if (type == RuneType.WATER)
+            tempTextureRegion = waterRuneTextureRegion;
+        else if (type == RuneType.WIND)
+            tempTextureRegion = windRuneTextureRegion;
+
+        testRune = new Rune(200, 200, 0, attack, hp, capacity, type, tempTextureRegion);
+        testRune.Init(getVertexBufferObjectManager(), scene, vectorArea);
+    }
+
+    public void SummonRandomRune(Random random) {
+        RuneType tempType = RuneType.getRandomType(random);
+        SummonRune(tempType, random.nextFloat() * 100, random.nextFloat() * 100, random.nextFloat() * 100);
+    }
+
+    public void SummonRandomAttackRune(Random random) {
+
+        RuneType tempType = RuneType.getRandomAttackType(random);
+        SummonRune(tempType, random.nextFloat() * 100, random.nextFloat() * 100, random.nextFloat() * 100);
+
     }
 }
