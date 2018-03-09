@@ -40,6 +40,9 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
     private BitmapTextureAtlas bottomScreenTableTextureAtlas;
     private ITextureRegion bottomScreenTableRegion;
 
+    private BitmapTextureAtlas screenTextureAtlas;
+    private ITextureRegion screenTableRegion;
+
     private BitmapTextureAtlas crystalRuneTextureAtlas;
     private BitmapTextureAtlas darkRuneTextureAtlas;
     private BitmapTextureAtlas earthRuneTextureAtlas;
@@ -101,8 +104,12 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
         bottomScreenFrameTextureAtlas.load();
 
         bottomScreenTableTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 1080, 720, TextureOptions.DEFAULT);
-        bottomScreenTableRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bottomScreenTableTextureAtlas, this, "bottomScreenTable.png", 0, 0);
+        bottomScreenTableRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(bottomScreenTableTextureAtlas, this, "BottomScreen.png", 0, 0);
         bottomScreenTableTextureAtlas.load();
+
+        screenTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 1080, 1920, TextureOptions.DEFAULT);
+        screenTableRegion = BitmapTextureAtlasTextureRegionFactory.createFromAsset(screenTextureAtlas, this, "Screen.png", 0, 0);
+        screenTextureAtlas.load();
 
         crystalRuneTextureAtlas = new BitmapTextureAtlas(getTextureManager(), 192, 256, TextureOptions.DEFAULT);
         crystalRuneTextureRegion = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(crystalRuneTextureAtlas, this, "RuneSprites/CrystalRune.png", 0, 0, 3, 4);
@@ -162,11 +169,10 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
     @Override
     protected Scene onCreateScene() {
         scene = new Scene();
-        scene.setBackground(new Background(0.69804f, 0.9274f, 0.7f));
+        scene.setBackground(new Background(0.5f, 0.92f, 0.98f));
 
-
-        Sprite bottomScreenTable = new Sprite(0, 600, 540, 360, bottomScreenTableRegion, getVertexBufferObjectManager());
-        scene.attachChild(bottomScreenTable);
+        Sprite topScreen = new Sprite(0, 0, 540, 960, screenTableRegion, getVertexBufferObjectManager());
+        scene.attachChild(topScreen);
 
         vectorArea = new VectorArea(0, 600, 540, 360, 20);
         vectorArea.Init();
@@ -178,7 +184,6 @@ public class GameActivity extends SimpleBaseGameActivity implements IOnSceneTouc
         AnimatedSprite enemy = createTiledSprite(enemyTextureRegion);
         AnimatedSprite gun = createTiledSprite(gunTextureRegion);
         AnimatedSprite turtle = createTiledSprite(turtleTextureRegion);
-
 
 
         Random random = new Random();
