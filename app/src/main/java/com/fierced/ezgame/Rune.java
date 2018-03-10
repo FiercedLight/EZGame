@@ -1,5 +1,7 @@
 package com.fierced.ezgame;
 
+import android.util.Log;
+
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.AnimatedSprite;
@@ -20,6 +22,7 @@ public class Rune {
 
     public int runeID;
     public float pX, pY, power;
+    private float prevPX, prevPY;
     public RuneType type;
     public ITiledTextureRegion textureRegion;
     public float size = 60;
@@ -28,11 +31,16 @@ public class Rune {
     public float attack, hp, capacity;
     private Rectangle powerIndicator;
     private Scene scene;
-    private AnimatedSprite runeSprite;
+    public AnimatedSprite runeSprite;
+    public AnimatedSprite treeSprite;
+    boolean hasTree = false;
+    public int layerX = 0, layerY = 0;
 
     public Rune(float pX, float pY, float power, float attack, float hp, float capacity, RuneType type, ITiledTextureRegion textureRegion) {
         this.pX = pX;
         this.pY = pY;
+        this.prevPX = pX;
+        this.prevPY = pY;
         this.power = power;
         this.type = type;
         this.textureRegion = textureRegion;
@@ -42,7 +50,12 @@ public class Rune {
         this.special = 0;
     }
 
-    public void Init(VertexBufferObjectManager vbo, Scene scene, final VectorArea vectorArea) {
+    public void SetTree(AnimatedSprite treeSprite) {
+        hasTree = true;
+        this.treeSprite = treeSprite;
+    }
+
+    public void Init(VertexBufferObjectManager vbo, final Scene scene, final VectorArea vectorArea) {
 
         runeID = globalRuneID;
         globalRuneID++;
@@ -57,30 +70,62 @@ public class Rune {
         runeSprite = new AnimatedSprite(pX, pY, size, size, textureRegion, vbo) {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
-                if (pSceneTouchEvent.isActionDown())
-                    this.setScale(1.5f);
-                if (pSceneTouchEvent.isActionUp()) {
-                    this.setScale(1.0f);
-                    if (type == RuneType.MIRROR) {
-                        //Log.println(Log.DEBUG, "Debug", Double.toString((((float)special / 8.0f) * Math.PI / 4)));
-                        special = (special + 1) % 8;
-                        this.setRotation((((float) (special - 2) / 8.0f) * 360.0f));
-                    } else if (type == RuneType.TRASH) {
-                        for (Rune r : vectorArea.runeList) {
-                            if (r.runeID == runeID) continue;
-                            if (Math.sqrt(Math.pow(pX - r.pX, 2) + Math.pow(pY - r.pY, 2)) < size / 2) {
-                                power += r.power + r.attack + r.capacity + r.hp;
-                                vectorArea.DelRune(r);
-                                r.Delete();
-                                break;
-                            }
-                        }
-                    }
-                }
+
+                PerspectiveShader.getInstance().setPos(pSceneTouchEvent.getX() / 540, pSceneTouchEvent.getY() / 960, 0.0f, 0.0f);
                 pX = pSceneTouchEvent.getX() - size / 2;
                 pY = pSceneTouchEvent.getY() - size / 2;
                 this.setPosition(pX, pY);
                 powerIndicator.setPosition(pX, pY + size + 2);
+
+                if (pSceneTouchEvent.isActionDown())
+                    this.setScale(1.5f);
+                if (pSceneTouchEvent.isActionUp()) {
+
+                    layerX = (int) ((pSceneTouchEvent.getX() + 30) / 60);
+                    layerY = (int) ((pSceneTouchEvent.getY() + 30) / 60);
+                    pX = layerX * 60 - size / 2;
+                    pY = layerY * 60 - size / 2;
+                    this.setPosition(pX, pY);
+                    powerIndicator.setPosition(pX, pY + size + 2);
+                    this.setScale(1.0f);
+
+                    if (hasTree) {
+                        treeSprite.setPosition(layerX * 60 - 150 + (layerY-10) * 20, layerY * 35 - 320);
+                        treeSprite.detachSelf();
+                        //Log.println(Log.DEBUG, "Debug", Integer.toString(layerY));
+                        scene.getChildByIndex(layerY-10).attachChild(treeSprite);
+                }
+
+                    for (Rune r : vectorArea.runeList) {
+                        if (r.runeID == runeID) continue;
+                        if (Math.sqrt(Math.pow(pX - r.pX, 2) + Math.pow(pY - r.pY, 2)) < size / 2) {
+                            if (type == RuneType.TRASH) {
+                                power += r.power + r.attack + r.capacity + r.hp;
+                                vectorArea.DelRune(r);
+                                r.Delete();
+                                break;
+
+                            } else {
+                                pX = prevPX;
+                                pY = prevPY;
+                                this.setPosition(pX, pY);
+                                powerIndicator.setPosition(pX, pY + size + 2);
+                            }
+                        }
+                    }
+
+                    if (type == RuneType.MIRROR) {
+                        if (Math.abs(prevPX - pX) + Math.abs(prevPY - pY) < 60) {
+                            //Log.println(Log.DEBUG, "Debug", Double.toString((((float)special / 8.0f) * Math.PI / 4)));
+                            special = (special + 1) % 8;
+                            this.setRotation((((float) (special - 2) / 8.0f) * 360.0f));
+                        }
+                    }
+
+                    prevPX = pX;
+                    prevPY = pY;
+
+                }
 
                 return true;
             }

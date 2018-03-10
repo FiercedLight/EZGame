@@ -17,7 +17,7 @@ public enum RuneType {
     public static RuneType getRandomAttackType(Random random) {
         RuneType retType = values()[random.nextInt(values().length)];
 
-        while (retType == MIRROR || retType == MECH || retType == TRASH)
+        while (retType == MIRROR || retType == MECH || retType == TRASH || retType == CRYSTAL)
             retType = values()[random.nextInt(values().length)];
 
         return retType;
