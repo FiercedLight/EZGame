@@ -45,7 +45,7 @@ public class PerspectiveShader extends ShaderProgram {
                     ShaderProgramConstants.ATTRIBUTE_TEXTURECOORDINATES + ";\n" +
                     "world_pos = " + ShaderProgramConstants.UNIFORM_MODELVIEWPROJECTIONMATRIX +
                     "*" + ShaderProgramConstants.ATTRIBUTE_POSITION + ";" +
-                    "   gl_Position = world_pos + vec4((world_pos.x-1.5+pos.x)*(-world_pos.y-0.25)*pos.y*2.0,(-world_pos.y-0.25)*0.1, pos.z, 0.0) ;\n" +
+                    "   gl_Position = world_pos + vec4((world_pos.x-1.0+pos.x*1.2)*(world_pos.y-0.25)*pos.y*(-1.5),(-world_pos.y-0.25)*pos.y, pos.z, 0.0) ;\n" +
                     "}";
 
     private static final String FRAGMENT_SHADER =
@@ -99,7 +99,6 @@ public class PerspectiveShader extends ShaderProgram {
         );
         GLES20.glUniform1i(mTexture0Location, 0);
         GLES20.glUniform4f(mPosLocation, camPosX, camPosY, 0.0f, 1.0f);
-        //TODO UPDATE
 
     }
 

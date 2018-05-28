@@ -1,5 +1,7 @@
 package com.fierced.ezgame;
 
+import org.andengine.entity.Entity;
+import org.andengine.entity.IEntity;
 import org.andengine.entity.primitive.Rectangle;
 import org.andengine.entity.scene.Scene;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
@@ -110,7 +112,7 @@ public class VectorArea {
 
     }
 
-    public void Draw(VertexBufferObjectManager vbo, Scene scene) {
+    public void Draw(VertexBufferObjectManager vbo, IEntity scene) {
         for (int i = 0; i < area_h; i++) {
             for (int j = 0; j < area_w; j++) {
                 Rectangle tempRect = new Rectangle(pX + j * cell_size, pY + i * cell_size, cell_size - 2, cell_size - 2, vbo);

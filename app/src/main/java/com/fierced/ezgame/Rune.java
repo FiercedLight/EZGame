@@ -71,7 +71,7 @@ public class Rune {
             @Override
             public boolean onAreaTouched(final TouchEvent pSceneTouchEvent, final float pTouchAreaLocalX, final float pTouchAreaLocalY) {
 
-                PerspectiveShader.getInstance().setPos(pSceneTouchEvent.getX() / 540, pSceneTouchEvent.getY() / 960, 0.0f, 0.0f);
+                //PerspectiveShader.getInstance().setPos(pSceneTouchEvent.getX() / 540, pSceneTouchEvent.getY() / 960, 0.0f, 0.0f);
                 pX = pSceneTouchEvent.getX() - size / 2;
                 pY = pSceneTouchEvent.getY() - size / 2;
                 this.setPosition(pX, pY);
@@ -81,49 +81,10 @@ public class Rune {
                     this.setScale(1.5f);
                 if (pSceneTouchEvent.isActionUp()) {
 
+
                     layerX = (int) ((pSceneTouchEvent.getX() + 30) / 60);
                     layerY = (int) ((pSceneTouchEvent.getY() + 30) / 60);
-                    pX = layerX * 60 - size / 2;
-                    pY = layerY * 60 - size / 2;
-                    this.setPosition(pX, pY);
-                    powerIndicator.setPosition(pX, pY + size + 2);
-                    this.setScale(1.0f);
-
-                    if (hasTree) {
-                        treeSprite.setPosition(layerX * 60 - 150 + (layerY-10) * 20, layerY * 35 - 320);
-                        treeSprite.detachSelf();
-                        //Log.println(Log.DEBUG, "Debug", Integer.toString(layerY));
-                        scene.getChildByIndex(layerY-10).attachChild(treeSprite);
-                }
-
-                    for (Rune r : vectorArea.runeList) {
-                        if (r.runeID == runeID) continue;
-                        if (Math.sqrt(Math.pow(pX - r.pX, 2) + Math.pow(pY - r.pY, 2)) < size / 2) {
-                            if (type == RuneType.TRASH) {
-                                power += r.power + r.attack + r.capacity + r.hp;
-                                vectorArea.DelRune(r);
-                                r.Delete();
-                                break;
-
-                            } else {
-                                pX = prevPX;
-                                pY = prevPY;
-                                this.setPosition(pX, pY);
-                                powerIndicator.setPosition(pX, pY + size + 2);
-                            }
-                        }
-                    }
-
-                    if (type == RuneType.MIRROR) {
-                        if (Math.abs(prevPX - pX) + Math.abs(prevPY - pY) < 60) {
-                            //Log.println(Log.DEBUG, "Debug", Double.toString((((float)special / 8.0f) * Math.PI / 4)));
-                            special = (special + 1) % 8;
-                            this.setRotation((((float) (special - 2) / 8.0f) * 360.0f));
-                        }
-                    }
-
-                    prevPX = pX;
-                    prevPY = pY;
+                    PlaceRune(layerX, layerY, this, true);
 
                 }
 
@@ -135,19 +96,79 @@ public class Rune {
         scene.registerTouchArea(runeSprite);
         scene.setTouchAreaBindingOnActionDownEnabled(true);
         Random tempRandom = new Random();
-        long[] runeAnimData = new long[]{100, 100, 100, 100,
+        long[] runeAnimData = new long[]{
+                700 + tempRandom.nextInt(800),
                 100, 100, 100, 100,
-                100, 100, 100, 700 + tempRandom.nextInt(800)};
+                100, 100, 100, 100,
+                100, 100, 100};
         runeSprite.animate(runeAnimData);
-        scene.attachChild(runeSprite);
+        scene.getChildByIndex(0).attachChild(runeSprite);
         vectorArea.AddRune(this);
 
     }
 
     public void Delete() {
         scene.unregisterTouchArea(runeSprite);
-        scene.detachChild(runeSprite);
+        runeSprite.detachSelf();
         scene.detachChild(powerIndicator);
+        if (hasTree)
+            treeSprite.detachSelf();
+    }
+
+    public boolean PlaceRune(int lX, int lY, AnimatedSprite sprite, boolean touchAct) { //If placing fails, returns false
+
+        layerX = lX;
+        layerY = lY;
+        pX = lX * 60 - size / 2;
+        pY = lY * 60 - size / 2;
+        sprite.setPosition(pX, pY);
+        powerIndicator.setPosition(pX, pY + size + 2);
+        sprite.setScale(1.0f);
+
+        for (Rune r : vectorArea.runeList) {
+            if (r.runeID == runeID) continue;
+            if (r.layerX == layerX && r.layerY == layerY) {
+                if (!touchAct) {
+                    pX = prevPX;
+                    pY = prevPY;
+                    sprite.setPosition(pX, pY);
+                    powerIndicator.setPosition(pX, pY + size + 2);
+                    return false;
+                }
+                if (type == RuneType.TRASH) {
+                    power += r.power + r.attack + r.capacity + r.hp;
+                    vectorArea.DelRune(r);
+                    r.Delete();
+                    break;
+
+                } else {
+                    pX = prevPX;
+                    pY = prevPY;
+                    sprite.setPosition(pX, pY);
+                    powerIndicator.setPosition(pX, pY + size + 2);
+                }
+            }
+        }
+
+        if (type == RuneType.MIRROR) {
+            if (Math.abs(prevPX - pX) + Math.abs(prevPY - pY) < 60) {
+                //Log.println(Log.DEBUG, "Debug", Double.toString((((float)special / 8.0f) * Math.PI / 4)));
+                special = (special + 1) % 8;
+                sprite.setRotation((((float) (special - 2) / 8.0f) * 360.0f));
+            }
+        }
+
+        prevPX = pX;
+        prevPY = pY;
+
+        if (hasTree) {
+            treeSprite.setPosition(layerX * 60 - 10, layerY * 15 - 20);
+            treeSprite.detachSelf();
+            //Log.println(Log.DEBUG, "Debug", Integer.toString(layerY));
+            scene.getChildByIndex(layerY - 4).attachChild(treeSprite);
+        }
+
+        return true;
     }
 
     public boolean OnPowerBallHit(PowerBall p) {
@@ -188,6 +209,8 @@ public class Rune {
             case FIRE:
                 break;
             case LEAF:
+                break;
+            case HEART:
                 break;
             case MECH:
                 vectorArea.ApplyForce(pX - vectorArea.pX + size / 2, pY - vectorArea.pY + size / 2, 20, (int) attack);

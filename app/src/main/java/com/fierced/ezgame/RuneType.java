@@ -7,7 +7,7 @@ import java.util.Random;
  */
 
 public enum RuneType {
-    CRYSTAL, DARK, EARTH, FIRE, LEAF, MECH,
+    CRYSTAL, DARK, EARTH, FIRE, LEAF, HEART, MECH,
     MIRROR, SNOW, STAR, TRASH, VOLT, WATER, WIND;
 
     public static RuneType getRandomType(Random random) {
@@ -17,7 +17,7 @@ public enum RuneType {
     public static RuneType getRandomAttackType(Random random) {
         RuneType retType = values()[random.nextInt(values().length)];
 
-        while (retType == MIRROR || retType == MECH || retType == TRASH || retType == CRYSTAL)
+        while (retType == MIRROR || retType == MECH || retType == TRASH || retType == CRYSTAL || retType == HEART)
             retType = values()[random.nextInt(values().length)];
 
         return retType;

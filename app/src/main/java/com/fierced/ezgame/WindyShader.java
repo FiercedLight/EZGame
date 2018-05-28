@@ -44,7 +44,7 @@ public class WindyShader extends ShaderProgram {
                     ShaderProgramConstants.ATTRIBUTE_TEXTURECOORDINATES + ";\n" +
                     "world_pos = " + ShaderProgramConstants.UNIFORM_MODELVIEWPROJECTIONMATRIX +
                     "*" + ShaderProgramConstants.ATTRIBUTE_POSITION + ";" +
-                    "   gl_Position = world_pos + vec4(sin(angle+world_pos.y*world_pos.x*50.0)*(1.0-"+ShaderProgramConstants.ATTRIBUTE_POSITION+".y/320.0)/20.0,0.0,0.0,0.0) ;\n" +
+                    "   gl_Position = world_pos + vec4(sin(angle+world_pos.y*world_pos.x*50.0)*(1.0-"+ShaderProgramConstants.ATTRIBUTE_POSITION+".y/160.0)/20.0,0.0,0.0,0.0) ;\n" +
                     "}";
 
     private static final String FRAGMENT_SHADER =
@@ -98,7 +98,6 @@ public class WindyShader extends ShaderProgram {
         );
         GLES20.glUniform1i(mTexture0Location, 0);
         GLES20.glUniform1f(mPosLocation, angle);
-        //TODO UPDATE
 
     }
 
